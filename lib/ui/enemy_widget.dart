@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/enemy.dart';
-import 'hp_bar.dart';
+import 'stat_bar.dart';
 
-// ==== GAME STATE ====
 class EnemyWidget extends StatelessWidget {
   final Enemy enemy;
   final bool hit;

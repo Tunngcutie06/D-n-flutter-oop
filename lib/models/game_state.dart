@@ -3,11 +3,6 @@ import '../logic/enums.dart';
 import 'player.dart';
 import 'enemy.dart';
 import 'item.dart';
-// ==== UTILITY FUNCS ====
-
-// ==== GAME STATE ====
-// ==== GAME STATE ====
-// ==== GAME STATE ====
 // ==== GAME STATE ====
 class GameState {
   final Player player = Player();

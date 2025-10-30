@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/player.dart';
 import '../logic/enums.dart';
-import 'hp_bar.dart';
+import 'stat_bar.dart';
 
 
 class PlayerWidget extends StatelessWidget {

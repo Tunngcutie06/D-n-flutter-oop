@@ -15,4 +15,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-///// hoàn thiện game/////////// báo cáo game

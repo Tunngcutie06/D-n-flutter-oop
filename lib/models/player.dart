@@ -1,11 +1,17 @@
 import '../logic/enums.dart';
-import '../logic/advantage_logic.dart';
+import '../logic/matchups.dart';
 import 'enemy.dart';
 import 'character.dart';
-import 'attack.dart';
 
 const double playerSolidWidth = 0.18; // solid collision
 const double attackReach = 0.15;
+
+
+
+// interface attack
+abstract class Attack {
+  void attack(dynamic target);
+}
 
 class Player extends Character implements Attack {
   FormType form;
@@ -20,7 +26,7 @@ class Player extends Character implements Attack {
       y = 0.8,
       vx = 0,
       vy = 0,
-      super(x: -0.8, hp: 300, maxHp: 300);
+      super(x: -0.8, hp: 100, maxHp: 100);
 
   void changeForm(FormType f) => form = f;
 
@@ -41,7 +47,7 @@ class Player extends Character implements Attack {
 
   void jump() {
     if (y >= 0.8 && !isStunned) {
-      // only jump if on ground
+      // only jump if on ground & isn't stunned
       vy = -0.07; // upward impulse
     }
   }
@@ -71,3 +77,4 @@ class Player extends Character implements Attack {
     }
   }
 }
+

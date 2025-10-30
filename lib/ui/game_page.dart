@@ -1,20 +1,17 @@
-// lib/ui/game_page.dart
 import 'dart:io';
 import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
-import '../logic/enums.dart';
-import '../models/enemy.dart';
-import 'enemy_widget.dart';
 import '../services/leaderboard_service.dart';
-import 'hp_bar.dart';
-import 'player_widget.dart';
+import '../logic/enums.dart';
+import '../logic/mechanics.dart';
+import '../models/enemy.dart';
 import '../models/game_state.dart';
-
-// === NEW: import file hàm logic
-import '../logic/utility.dart';
+import 'player_widget.dart';
+import 'enemy_widget.dart';
+import 'stat_bar.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -28,7 +25,6 @@ class _GamePageState extends State<GamePage> {
   Timer? loopTimer;
   late final AudioPlayer _bgPlayer;
 
-  // ==== State như cũ (giữ nguyên biến) ====
   bool showASprite = false;
   bool waitingStart = true;
   bool roundOver = false;
@@ -60,7 +56,7 @@ class _GamePageState extends State<GamePage> {
     // Load leaderboard upon app start
     LeaderboardService().load();
 
-    // ==== Start loop: gọi HÀM logic gameLoopFn ====
+    // Inserting leaderboard data into game
     WidgetsBinding.instance.addPostFrameCallback((_) {
       loopTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {
         if (!mounted) return;
@@ -601,11 +597,7 @@ class _GamePageState extends State<GamePage> {
                           // Attack
                           GestureDetector(
                             onTapDown: (_) {
-                              if (!waitingStart &&
-                                  !roundOver &&
-                                  !gameOver &&
-                                  !game.player.isStunned) {
-                                // Mobile attack gọi ngay hàm (y như code gốc)
+                              if (!waitingStart && !roundOver && !gameOver && !game.player.isStunned) {
                                 attackPressedFn(
                                   game: game,
                                   enemyHitMap: enemyHitMap,
