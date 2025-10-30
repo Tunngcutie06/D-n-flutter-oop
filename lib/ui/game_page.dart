@@ -62,40 +62,37 @@ class _GamePageState extends State<GamePage> {
 
     // ==== Start loop: gọi HÀM logic gameLoopFn ====
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loopTimer = Timer.periodic(
-        const Duration(milliseconds: 16),
-        (_) {
-          if (!mounted) return;
-          gameLoopFn(
-            context: context,
-            game: game,
-            getWaitingStart: () => waitingStart,
-            setWaitingStart: (v) => waitingStart = v,
-            getRoundOver: () => roundOver,
-            setRoundOver: (v) => roundOver = v,
-            getGameOver: () => gameOver,
-            setGameOver: (v) => gameOver = v,
-            getPlayerHit: () => playerHit,
-            setPlayerHit: (v) => playerHit = v,
-            getKeyLeft: () => keyLeft,
-            setKeyLeft: (v) => keyLeft = v,
-            getKeyRight: () => keyRight,
-            setKeyRight: (v) => keyRight = v,
-            getKeyAttack: () => keyAttack,
-            setKeyAttack: (v) => keyAttack = v,
-            getDefendTriggered: () => defendTriggered,
-            setDefendTriggered: (v) => defendTriggered = v,
-            getRunLogged: () => runLogged,
-            setRunLogged: (v) => runLogged = v,
-            enemyHitMap: enemyHitMap,
-            setStateFn: () {
-              if (mounted) setState(() {});
-            },
-            getShowASprite: () => showASprite,
-            setShowASprite: (v) => showASprite = v,
-          );
-        },
-      );
+      loopTimer = Timer.periodic(const Duration(milliseconds: 16), (_) {
+        if (!mounted) return;
+        gameLoopFn(
+          context: context,
+          game: game,
+          getWaitingStart: () => waitingStart,
+          setWaitingStart: (v) => waitingStart = v,
+          getRoundOver: () => roundOver,
+          setRoundOver: (v) => roundOver = v,
+          getGameOver: () => gameOver,
+          setGameOver: (v) => gameOver = v,
+          getPlayerHit: () => playerHit,
+          setPlayerHit: (v) => playerHit = v,
+          getKeyLeft: () => keyLeft,
+          setKeyLeft: (v) => keyLeft = v,
+          getKeyRight: () => keyRight,
+          setKeyRight: (v) => keyRight = v,
+          getKeyAttack: () => keyAttack,
+          setKeyAttack: (v) => keyAttack = v,
+          getDefendTriggered: () => defendTriggered,
+          setDefendTriggered: (v) => defendTriggered = v,
+          getRunLogged: () => runLogged,
+          setRunLogged: (v) => runLogged = v,
+          enemyHitMap: enemyHitMap,
+          setStateFn: () {
+            if (mounted) setState(() {});
+          },
+          getShowASprite: () => showASprite,
+          setShowASprite: (v) => showASprite = v,
+        );
+      });
     });
   }
 
@@ -194,8 +191,7 @@ class _GamePageState extends State<GamePage> {
 
         int highlightIndex = -1;
         if (highlightWave != null) {
-          highlightIndex =
-              entries.indexWhere((e) => e.wave == highlightWave);
+          highlightIndex = entries.indexWhere((e) => e.wave == highlightWave);
           if (highlightIndex != -1) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               scrollController.animateTo(
@@ -337,8 +333,7 @@ class _GamePageState extends State<GamePage> {
                   // Player
                   if (game.player.hp > 0)
                     Align(
-                      alignment:
-                          Alignment(game.player.x, game.player.y),
+                      alignment: Alignment(game.player.x, game.player.y),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -366,8 +361,10 @@ class _GamePageState extends State<GamePage> {
                                   child: Transform(
                                     alignment: Alignment.center,
                                     transform: Matrix4.identity()
-                                      ..scale(
+                                      ..scaleByDouble(
                                         game.player.facingRight ? 1.2 : -1.2,
+                                        1.2,
+                                        1.2,
                                         1.2,
                                       ),
                                     child: Image.asset(
@@ -507,8 +504,8 @@ class _GamePageState extends State<GamePage> {
                               }
                             },
                             child: Container(
-                              width: 90,
-                              height: 90,
+                              width: 65,
+                              height: 65,
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(123, 255, 255, 255),
                                 borderRadius: BorderRadius.circular(8),
@@ -533,13 +530,12 @@ class _GamePageState extends State<GamePage> {
                                     setState(() => keyLeft = true);
                                   }
                                 },
-                                onTapUp: (_) =>
-                                    setState(() => keyLeft = false),
+                                onTapUp: (_) => setState(() => keyLeft = false),
                                 onTapCancel: () =>
                                     setState(() => keyLeft = false),
                                 child: Container(
-                                  width: 90,
-                                  height: 90,
+                                  width: 65,
+                                  height: 65,
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                       123,
@@ -571,8 +567,8 @@ class _GamePageState extends State<GamePage> {
                                 onTapCancel: () =>
                                     setState(() => keyRight = false),
                                 child: Container(
-                                  width: 90,
-                                  height: 90,
+                                  width: 65,
+                                  height: 65,
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                       123,
@@ -605,7 +601,10 @@ class _GamePageState extends State<GamePage> {
                           // Attack
                           GestureDetector(
                             onTapDown: (_) {
-                              if (!waitingStart && !roundOver && !gameOver) {
+                              if (!waitingStart &&
+                                  !roundOver &&
+                                  !gameOver &&
+                                  !game.player.isStunned) {
                                 // Mobile attack gọi ngay hàm (y như code gốc)
                                 attackPressedFn(
                                   game: game,
@@ -623,8 +622,8 @@ class _GamePageState extends State<GamePage> {
                               }
                             },
                             child: Container(
-                              width: 90,
-                              height: 90,
+                              width: 65,
+                              height: 65,
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(123, 255, 0, 0),
                                 borderRadius: BorderRadius.circular(8),
@@ -645,8 +644,8 @@ class _GamePageState extends State<GamePage> {
                               }
                             },
                             child: Container(
-                              width: 90,
-                              height: 90,
+                              width: 65,
+                              height: 65,
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(123, 0, 94, 255),
                                 borderRadius: BorderRadius.circular(8),
@@ -665,8 +664,8 @@ class _GamePageState extends State<GamePage> {
                               GestureDetector(
                                 onTap: previousForm,
                                 child: Container(
-                                  width: 90,
-                                  height: 90,
+                                  width: 65,
+                                  height: 65,
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                       123,
@@ -686,8 +685,8 @@ class _GamePageState extends State<GamePage> {
                               GestureDetector(
                                 onTap: nextForm,
                                 child: Container(
-                                  width: 90,
-                                  height: 90,
+                                  width: 65,
+                                  height: 65,
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                       123,

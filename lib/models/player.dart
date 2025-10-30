@@ -7,9 +7,6 @@ import 'attack.dart';
 const double playerSolidWidth = 0.18; // solid collision
 const double attackReach = 0.15;
 
-
-
-
 class Player extends Character implements Attack {
   FormType form;
   double y;
@@ -43,7 +40,7 @@ class Player extends Character implements Attack {
   int get attackCooldownMs => form.attackCooldownMs;
 
   void jump() {
-    if (y >= 0.8) {
+    if (y >= 0.8 && !isStunned) {
       // only jump if on ground
       vy = -0.07; // upward impulse
     }
@@ -74,6 +71,3 @@ class Player extends Character implements Attack {
     }
   }
 }
-
-
-
