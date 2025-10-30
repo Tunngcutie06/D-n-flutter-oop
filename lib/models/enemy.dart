@@ -2,6 +2,7 @@ import 'package:flutter_application_1/models/player.dart';
 import '../logic/advantage_logic.dart';
 import '../logic/enums.dart';
 import 'character.dart';
+import 'attack.dart';
 
 const double enemySolidWidth = 0.18;
 
@@ -31,3 +32,4 @@ class Enemy extends Character implements Attack {
     }
   }
 }
+
