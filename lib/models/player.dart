@@ -9,10 +9,6 @@ const double attackReach = 0.15;
 
 
 
-// interface attack
-abstract class Attack {
-  void attack(dynamic target);
-}
 
 class Player extends Character implements Attack {
   FormType form;
@@ -78,5 +74,6 @@ class Player extends Character implements Attack {
     }
   }
 }
+
 
 
