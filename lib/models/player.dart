@@ -2,6 +2,7 @@ import '../logic/enums.dart';
 import '../logic/advantage_logic.dart';
 import 'enemy.dart';
 import 'character.dart';
+import 'attack.dart';
 
 const double playerSolidWidth = 0.18; // solid collision
 const double attackReach = 0.15;
@@ -77,4 +78,5 @@ class Player extends Character implements Attack {
     }
   }
 }
+
 
