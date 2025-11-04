@@ -382,57 +382,94 @@ class _GamePageState extends State<GamePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Leaderboard Button
-                          ElevatedButton(
-                            onPressed: () => showLeaderboard(),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orangeAccent,
-                            ),
-                            child: const Text("Leaderboard"),
-                          ),
-                          const SizedBox(height: 12),
-                          Container(
-                            color: Colors.grey,
-                            child: Text(
-                              "HP: ${game.player.hp.toStringAsFixed(0)}/${game.player.maxHp.toStringAsFixed(0)}",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Leftmost: Leaderboard button
+                              ElevatedButton(
+                                onPressed: () => showLeaderboard(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orangeAccent,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                ),
+                                child: const Text("Leaderboard"),
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            color: Colors.grey,
-                            child: Text(
-                              "Form: ${game.player.name}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
+                              const SizedBox(width: 12),
+
+                              // Right side: 4 status boxes in the same row
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        color: Colors.grey,
+                                        child: Text(
+                                          "HP: ${game.player.hp.toStringAsFixed(0)}/${game.player.maxHp.toStringAsFixed(0)}",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        color: Colors.grey,
+                                        child: Text(
+                                          "Form: ${game.player.name}",
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        color: Colors.grey,
+                                        child: Text(
+                                          "Wave: ${game.wave}",
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        color: Colors.grey,
+                                        child: Text(
+                                          "Remaining: ${game.totalEnemiesInWave - game.spawnedCount}",
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            color: Colors.grey,
-                            child: Text(
-                              "Wave: ${game.wave}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            color: Colors.grey,
-                            child: Text(
-                              "Remaining: ${game.totalEnemiesInWave - game.spawnedCount}",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
@@ -487,217 +524,247 @@ class _GamePageState extends State<GamePage> {
 
                   // ===== MOBILE CONTROLS LEFT=====
                   if (Platform.isAndroid || Platform.isIOS)
-                    Positioned(
-                      left: 12,
-                      bottom: 12,
-                      child: Column(
-                        children: [
-                          // Jump Button
-                          GestureDetector(
-                            onTap: () {
-                              if (!waitingStart && !roundOver && !gameOver) {
-                                game.player.jump();
-                              }
-                            },
-                            child: Container(
-                              width: 65,
-                              height: 65,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(123, 255, 255, 255),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.arrow_upward,
-                                size: 36,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          // Left & Right buttons row
-                          Row(
+                    Builder(
+                      builder: (ctx) {
+                        final leftInset =
+                            MediaQuery.of(ctx).size.width * 0.06; // 6%
+                        return Positioned(
+                          left: leftInset,
+                          bottom: 12,
+                          child: Column(
                             children: [
-                              // Left Button
-                              GestureDetector(
-                                onTapDown: (_) {
-                                  if (!waitingStart &&
-                                      !roundOver &&
-                                      !gameOver) {
-                                    setState(() => keyLeft = true);
-                                  }
-                                },
-                                onTapUp: (_) => setState(() => keyLeft = false),
-                                onTapCancel: () =>
-                                    setState(() => keyLeft = false),
-                                child: Container(
-                                  width: 65,
-                                  height: 65,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                      123,
-                                      255,
-                                      255,
-                                      255,
+                              // Left & Right buttons row
+                              Row(
+                                children: [
+                                  // Left Button
+                                  GestureDetector(
+                                    onTapDown: (_) {
+                                      if (!waitingStart &&
+                                          !roundOver &&
+                                          !gameOver) {
+                                        setState(() => keyLeft = true);
+                                      }
+                                    },
+                                    onTapUp: (_) =>
+                                        setState(() => keyLeft = false),
+                                    onTapCancel: () =>
+                                        setState(() => keyLeft = false),
+                                    child: Container(
+                                      width: 62,
+                                      height: 62,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                          123,
+                                          255,
+                                          255,
+                                          255,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(
+                                        Icons.arrow_left,
+                                        size: 36,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Icon(
-                                    Icons.arrow_left,
-                                    size: 36,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              // Right Button
-                              GestureDetector(
-                                onTapDown: (_) {
-                                  if (!waitingStart &&
-                                      !roundOver &&
-                                      !gameOver) {
-                                    setState(() => keyRight = true);
-                                  }
-                                },
-                                onTapUp: (_) =>
-                                    setState(() => keyRight = false),
-                                onTapCancel: () =>
-                                    setState(() => keyRight = false),
-                                child: Container(
-                                  width: 65,
-                                  height: 65,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                      123,
-                                      255,
-                                      255,
-                                      255,
+                                  const SizedBox(width: 12),
+                                  // Right Button
+                                  GestureDetector(
+                                    onTapDown: (_) {
+                                      if (!waitingStart &&
+                                          !roundOver &&
+                                          !gameOver) {
+                                        setState(() => keyRight = true);
+                                      }
+                                    },
+                                    onTapUp: (_) =>
+                                        setState(() => keyRight = false),
+                                    onTapCancel: () =>
+                                        setState(() => keyRight = false),
+                                    child: Container(
+                                      width: 62,
+                                      height: 62,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                          123,
+                                          255,
+                                          255,
+                                          255,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(
+                                        Icons.arrow_right,
+                                        size: 36,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Icon(
-                                    Icons.arrow_right,
-                                    size: 36,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
 
                   // ===== MOBILE CONTROLS RIGHT=====
                   if (Platform.isAndroid || Platform.isIOS)
-                    Positioned(
-                      right: 12,
-                      bottom: 12,
-                      child: Column(
-                        children: [
-                          // Attack
-                          GestureDetector(
-                            onTapDown: (_) {
-                              if (!waitingStart && !roundOver && !gameOver && !game.player.isStunned) {
-                                attackPressedFn(
-                                  game: game,
-                                  enemyHitMap: enemyHitMap,
-                                  getWaitingStart: () => waitingStart,
-                                  getRoundOver: () => roundOver,
-                                  getGameOver: () => gameOver,
-                                  getShowASprite: () => showASprite,
-                                  setShowASprite: (v) =>
-                                      setState(() => showASprite = v),
-                                  setStateFn: () {
-                                    if (mounted) setState(() {});
-                                  },
-                                );
-                              }
-                            },
-                            child: Container(
-                              width: 65,
-                              height: 65,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(123, 255, 0, 0),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.flash_on,
-                                size: 36,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          // Defend
-                          GestureDetector(
-                            onTapDown: (_) {
-                              if (!waitingStart && !roundOver && !gameOver) {
-                                defendTriggered = true; // loop sẽ xử lý
-                              }
-                            },
-                            child: Container(
-                              width: 65,
-                              height: 65,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(123, 0, 94, 255),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.shield,
-                                size: 36,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          // Switch Form
-                          Row(
+                    Builder(
+                      builder: (ctx) {
+                        final rightInset =
+                            MediaQuery.of(ctx).size.width * 0.06; // 6%
+                        return Positioned(
+                          right: rightInset,
+                          bottom: 12,
+                          child: Column(
                             children: [
+                              // Attack
                               GestureDetector(
-                                onTap: previousForm,
+                                onTapDown: (_) {
+                                  if (!waitingStart &&
+                                      !roundOver &&
+                                      !gameOver &&
+                                      !game.player.isStunned) {
+                                    attackPressedFn(
+                                      game: game,
+                                      enemyHitMap: enemyHitMap,
+                                      getWaitingStart: () => waitingStart,
+                                      getRoundOver: () => roundOver,
+                                      getGameOver: () => gameOver,
+                                      getShowASprite: () => showASprite,
+                                      setShowASprite: (v) =>
+                                          setState(() => showASprite = v),
+                                      setStateFn: () {
+                                        if (mounted) setState(() {});
+                                      },
+                                    );
+                                  }
+                                },
                                 child: Container(
-                                  width: 65,
-                                  height: 65,
+                                  width: 60,
+                                  height: 60,
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                      123,
-                                      115,
-                                      255,
-                                      0,
-                                    ),
+                                    color: const Color.fromARGB(123, 255, 0, 0),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: const Icon(
-                                    Icons.arrow_left,
+                                    Icons.flash_on,
+                                    size: 36,
                                     color: Color.fromARGB(255, 0, 0, 0),
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(height: 12),
+                              // Defend
                               GestureDetector(
-                                onTap: nextForm,
+                                onTapDown: (_) {
+                                  if (!waitingStart &&
+                                      !roundOver &&
+                                      !gameOver) {
+                                    defendTriggered = true; // loop sẽ xử lý
+                                  }
+                                },
                                 child: Container(
-                                  width: 65,
-                                  height: 65,
+                                  width: 60,
+                                  height: 60,
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                       123,
-                                      115,
-                                      255,
                                       0,
+                                      94,
+                                      255,
                                     ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: const Icon(
-                                    Icons.arrow_right,
+                                    Icons.shield,
+                                    size: 36,
                                     color: Color.fromARGB(255, 0, 0, 0),
                                   ),
                                 ),
+                              ),
+                              const SizedBox(height: 12),
+                              // Jump Button (moved here)
+                              GestureDetector(
+                                onTap: () {
+                                  if (!waitingStart &&
+                                      !roundOver &&
+                                      !gameOver) {
+                                    game.player.jump();
+                                  }
+                                },
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                      123,
+                                      255,
+                                      255,
+                                      255,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.arrow_upward,
+                                    size: 36,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              // Switch Form
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: previousForm,
+                                    child: Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                          123,
+                                          115,
+                                          255,
+                                          0,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(
+                                        Icons.arrow_left,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  GestureDetector(
+                                    onTap: nextForm,
+                                    child: Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                          123,
+                                          115,
+                                          255,
+                                          0,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(
+                                        Icons.arrow_right,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                 ],
               ),
